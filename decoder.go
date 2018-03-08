@@ -8,12 +8,6 @@ import (
 	"strconv"
 )
 
-func panicOnError(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 ////  Drum machine File format
 // 14: SPLICE + 8 byte length of rest of file
 // 32: byte string HW Version
@@ -29,7 +23,10 @@ func panicOnError(e error) {
 func DecodeFile(path string) (*Pattern, error) {
 	pattern := &Pattern{}
 	data, err := ioutil.ReadFile(path)
-	panicOnError(err)
+	if err != nil {
+		return nil, err
+	}
+
 	// TODO wrap all binary.REad and panic with a valid message?
 	if string(data[:6]) != "SPLICE" {
 		return nil, fmt.Errorf("File '%s' is not a valid splice file, SPLICE header not found", path)
