@@ -26,9 +26,7 @@ func DecodeFile(path string) (*Pattern, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// TODO wrap all binary.REad and panic with a valid message?
-	if string(data[:6]) != "SPLICE" {
+	if len(data) < 6 || string(data[:6]) != "SPLICE" {
 		return nil, fmt.Errorf("File '%s' is not a valid splice file, SPLICE header not found", path)
 	}
 	r := bytes.NewReader(data[6:]) // Skip SPLICE header
